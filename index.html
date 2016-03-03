@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>P value from Z score</title>
+</head>
+<body>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jstat/1.5.2/jstat.min.js"></script>
+<script type="text/javascript">
+  // Copyright (c) 2012 Sutoiku, Inc. (MIT License)
+
+  function NORMDIST(x, mean, sd, cumulative) {
+    // Check parameters
+    if (isNaN(x) || isNaN(mean) || isNaN(sd)) return '#VALUE!';
+    if (sd <= 0) return '#NUM!';
+
+    // Return normal distribution computed by jStat [http://jstat.org]
+    return (cumulative) ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
+  }
+
+  function pvaluefromzscore(x) {
+    if(x > 0) {
+      return (1 - NORMDIST(x, 0, 1, true))
+    } else {
+      return NORMDIST(x, 0, 1, true)
+    };
+  }
+
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var button = document.querySelectorAll("button")[0];
+    var textarea = document.querySelectorAll("textarea")[0];
+    var result = document.querySelectorAll(".result")[0];
+
+    button.addEventListener("click", function(){
+      result.innerHTML = pvaluefromzscore(textarea.value);
+    })
+  });
+
+
+</script>
+<h1>P value from Z score</h1>
+<p>
+  This little tool will give you P values from any positive or negative Z score
+  you enter. It will only give you the result for a one-tailed hypothesis. Just
+  multiply the result by 2 if you need two-tail.
+</p>
+<textarea placeholder="Enter a CSV (comma-separated value) list of Z scores, one per line" cols="50"></textarea>
+<button>Calculate</button>
+<p class="result"></p>
+</body>
+</html>
