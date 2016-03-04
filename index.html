@@ -17,6 +17,16 @@
     return (cumulative) ? jStat.normal.cdf(x, mean, sd) : jStat.normal.pdf(x, mean, sd);
   }
 
+  function parseInputs(inputs) {
+    var inputList = inputs.split(/\r?\n/);
+
+    if (inputList.length <= 1){
+      return [pvaluefromzscore(inputList[0])];
+    } else {
+      return inputList.map(function(item){ return pvaluefromzscore(item); });
+    }
+  }
+
   function pvaluefromzscore(x) {
     if(x > 0) {
       return (1 - NORMDIST(x, 0, 1, true))
@@ -26,15 +36,16 @@
   }
 
   document.addEventListener("DOMContentLoaded", function(event) {
-    var button = document.querySelectorAll("button")[0];
+    var form = document.querySelectorAll("form")[0];
     var textarea = document.querySelectorAll("textarea")[0];
     var result = document.querySelectorAll(".result")[0];
 
-    button.addEventListener("click", function(){
-      result.innerHTML = pvaluefromzscore(textarea.value);
+    form.addEventListener("submit", function(event){
+      result.innerHTML = parseInputs(textarea.value).join('\r');
+
+      event.preventDefault();
     })
   });
-
 
 </script>
 <h1>P value from Z score</h1>
@@ -43,10 +54,14 @@
   you enter. It will only give you the result for a one-tailed hypothesis. Just
   multiply the result by 2 if you need two-tail.
 </p>
-<textarea placeholder="Enter a CSV (comma-separated value) list of Z scores, one per line" cols="50"></textarea>
-<br/>
-<button>Calculate</button>
-<p><strong>P value:</strong> <span class="result"></span></p>
+<h2>Inputs:</h2>
+<form action="">
+  <textarea placeholder="Enter one or many Z scores, one per line." cols="40" rows="5"></textarea>
+  <input type="submit" value="Calculate" />
+</form>
+
+<h2>P value output(s):</h2>
+<pre class='result'></pre>
 
 <footer>
   <p>This tool uses the <a href="https://github.com/jstat/jstat">jStat</a> library and more specifically its <a href="http://jstat.github.io/distributions.html#jStat.normal.cdf"><code>jStat.normal.cdf(x, mean, sd)</code></a> and <a href="http://jstat.github.io/distributions.html#jStat.normal.pdf"><code>jStat.normal.pdf(x, mean, sd)</code></a> functions. It was inspired by a <a href="https://gist.github.com/ghalimi/4476478">Gist</a> from <a href="https://github.com/ghalimi">Ismael Ghalimi</a>.</p>
