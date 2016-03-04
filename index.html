@@ -35,6 +35,16 @@
     };
   }
 
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  }
+
   document.addEventListener("DOMContentLoaded", function(event) {
     var form = document.querySelectorAll("form")[0];
     var textarea = document.querySelectorAll("textarea")[0];
@@ -65,6 +75,10 @@
 
 <footer>
   <p>This tool uses the <a href="https://github.com/jstat/jstat">jStat</a> library and more specifically its <a href="http://jstat.github.io/distributions.html#jStat.normal.cdf"><code>jStat.normal.cdf(x, mean, sd)</code></a> and <a href="http://jstat.github.io/distributions.html#jStat.normal.pdf"><code>jStat.normal.pdf(x, mean, sd)</code></a> functions. It was inspired by a <a href="https://gist.github.com/ghalimi/4476478">Gist</a> from <a href="https://github.com/ghalimi">Ismael Ghalimi</a>.</p>
+
+  <p>
+    The source for this tool is open source an can be found <a href="https://github.com/olivierlacan/PfromZ/">on GitHub</a>.
+  </p>
 </footer>
 </body>
 </html>
